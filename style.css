@@ -1,5 +1,5 @@
-.body{
-    margin:0px;
+.body {
+    margin: 0px; 
 }
 .background{
     width:100%;
@@ -7,10 +7,23 @@
     background-image: url("Resources/background.jpg");
     background-size: cover;
     background-repeat: repeat-x;
-    position: relative;
+    position: absolute;
+    overflow: hidden;
 }
 .boy{
     height: 280px;
     margin-top: 320px;
     position: absolute;
+}
+
+
+.box {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    margin-top: 500px;
+    background-image: url(Resources/fire-66.gif);
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    
 }
