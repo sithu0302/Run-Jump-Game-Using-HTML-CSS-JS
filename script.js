@@ -15,6 +15,8 @@ var backgroundPosition = 0;
 var isRunning = false;
 var isJumping = false;
 
+var score=0;
+
 // Idle Animation
 function idleAnimation() {
     idleImageNumber++;
@@ -41,6 +43,9 @@ function runAnimation() {
 function moveBackground() {
     backgroundPosition -= 20;
     background.style.backgroundPosition = backgroundPosition + "px 0";
+
+    score=score+1;
+    document.getElementById("score").innerHTML=score;
 }
 
 function startRunAnimation() {
@@ -124,7 +129,7 @@ function keyCheck(event) {
 
 // Make Barriers
 
-var boxMarginLeft=1040;
+var boxMarginLeft=1340;
 
 function creatBox(){
 
@@ -144,38 +149,54 @@ function creatBox(){
     } else if (i >= 5 && i < 15) {
         boxMarginLeft += 500;
     } else {
-        boxMarginLeft += 500;
+        boxMarginLeft += 300;
     }
 }
 }
-
-var boxAnimationId=0;
+// Animate box movement
+var boxAnimationId = 0;
 function boxAnimation() {
     for (var i = 0; i <= 20; i++) {
-      var box = document.getElementById("box" + i);
-      if (box) {
-        var currentMarginLeft = parseInt(getComputedStyle(box).marginLeft);
-        box.style.marginLeft = (currentMarginLeft - 20) + "px";
-      }
-   // Collision check
-if (currentMarginLeft >= -10 && currentMarginLeft <= 10) {
-    if (boyMarginTop > 300) {
-        // Boy didn’t jump → Game Over
-        clearInterval(boxAnimationId);
-        clearInterval(jumpInterval);
-        clearInterval(runInterval);
-        clearInterval(backgroundInterval);
+        var box = document.getElementById("box" + i);
+        if (box) {
+            var currentMarginLeft = parseInt(getComputedStyle(box).marginLeft);
+            box.style.marginLeft = (currentMarginLeft - 20) + "px";
 
-        boxAnimationId = 0;
-        runInterval = 0;
-        backgroundInterval = 0;
+            // Collision check range
+            if (currentMarginLeft >= 100 && currentMarginLeft <= 150) {
+                if (boyMarginTop >= 327 && !isJumping) {
+                    // Collision occurred → Game over
+                    clearInterval(boxAnimationId);
+                    clearInterval(jumpInterval);
+                    clearInterval(runInterval);
+                    clearInterval(backgroundInterval);
 
-        alert("Game Over! You hit the fire.");
-    } else {
-        // Boy jumped over the fire → Nothing happens
-        console.log("Safe Jump!");
+                    boxAnimationId = 0;
+                    runInterval = 0;
+                    backgroundInterval = 0;
+
+                    if (deadAnimationNumber === 0) {
+                        deadAnimationNumber = setInterval(boyDeadAnimation, 100);
+                    }
+
+                    break;
+                } else {
+                    console.log("Safe: Jump karala box eka avoid kala.");
+                }
+            }
+        }
     }
 }
 
-}
+// Dead animation
+var deadAnimationNumber = 0;
+var deadImageNumber = 1;
+
+function boyDeadAnimation() {
+    deadImageNumber++;
+    if (deadImageNumber > 10) {
+        deadImageNumber = 10;
+    }
+
+    boy.src = "Resources/Dead (" + deadImageNumber + ").png";
 }

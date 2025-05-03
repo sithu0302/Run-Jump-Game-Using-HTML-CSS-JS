@@ -5,11 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jump & Run</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
 </head>
 <body class="body" onload="idleAnimationStart();creatBox();" onkeypress="keyCheck(event);">
     <div class="background" id="background">
         <img src="Resources/Idle (1).png" class="boy" id="boy">
-    
+
+    <!-- <img src="Resources/—Pngtree—wooden wood cartoon illustration_4737967.png" class="text-box">-->
+        
+        <div class="score" id="score">
+            0
+        </div>
+        <!--<div class="end"id="end">
+        <center>
+            <div style="color:yellow">Game Over</div>
+            <div style="color:pink ;font-size:60px">Your score</div>
+            <div style="color:orange ;font-size:60px" class="end-score" id="end-score">0</div>
+            <button id=button>Try Again</button>
+        </center>
+        </div>-->
     </div>
     <script src="script.js"></script>
 </body>

@@ -27,3 +27,33 @@
     background-repeat: no-repeat; 
     
 }
+.score{
+    font-size: 50px;
+    font-weight:bold ;
+    margin-top: 20px;
+    margin-right: 20px;
+    position:absolute;
+    font-style: italic;
+    color: transparent;
+    -webkit-text-stroke: 2px #05464b; /* Stroke Color */
+    -webkit-background-clip: text;
+    background-clip: text;
+    background:url(Resources/—Pngtree—wooden\ wood\ cartoon\ illustration_4737967.png); 
+    padding: 35px 70px;
+    background-size: cover;
+}/*
+.end{
+    width:2000px;
+    height:100vh;
+    position:absolute;
+    background-image:linear-gradient(90deg,#05464b,#11f);
+    display:flex;
+    flex-direction:column; 
+    align-items:center;
+    font-size:90px;
+    font-weight:bold;
+    color:white;
+    font-family:"broadway";
+  
+
+}*/
