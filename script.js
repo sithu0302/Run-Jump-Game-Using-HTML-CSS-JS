@@ -133,7 +133,7 @@ var boxMarginLeft=1340;
 
 function creatBox(){
 
-    for (var i = 0; i <= 20; i++) {
+    for (var i = 0; i <= 25; i++) {
 
 
     var box= document.createElement("div");
@@ -141,31 +141,40 @@ function creatBox(){
     document.getElementById("background").appendChild(box);
     box.style.marginLeft=boxMarginLeft + "px";
     box.id = "box" + i;
-    //boxMarginLeft=boxMarginLeft+500;
+//boxMarginLeft=boxMarginLeft+500;
 
     
-    if (i < 5) {
+    if (i < 8) {
         boxMarginLeft += 750;
-    } else if (i >= 5 && i < 15) {
+    } else if (i >= 5 && i < 18) {
         boxMarginLeft += 500;
     } else {
-        boxMarginLeft += 300;
+        boxMarginLeft += 350;
     }
+
+
 }
 }
 // Animate box movement
 var boxAnimationId = 0;
+var passedFireCount = 0;
+
+// Animate box movement and check for collisions
 function boxAnimation() {
-    for (var i = 0; i <= 20; i++) {
+    for (var i = 0; i <= 25; i++) {
         var box = document.getElementById("box" + i);
         if (box) {
             var currentMarginLeft = parseInt(getComputedStyle(box).marginLeft);
-            box.style.marginLeft = (currentMarginLeft - 20) + "px";
-
-            // Collision check range
+            box.style.marginLeft = (currentMarginLeft - 25) + "px";
+//  Count as passed when it leaves the character area
+        if (currentMarginLeft < 100 && !box.passed) {
+            passedFireCount++;
+            box.passed = true;          
+        }
+// Collision detection
             if (currentMarginLeft >= 100 && currentMarginLeft <= 150) {
                 if (boyMarginTop >= 327 && !isJumping) {
-                    // Collision occurred → Game over
+ // Collision occurred → Game over
                     clearInterval(boxAnimationId);
                     clearInterval(jumpInterval);
                     clearInterval(runInterval);
@@ -180,12 +189,28 @@ function boxAnimation() {
                     }
 
                     break;
-                } else {
-                    console.log("Safe: Jump karala box eka avoid kala.");
                 }
             }
         }
+
+   // 🎉 Win Condition
+   if (passedFireCount >= 25) {
+    clearInterval(boxAnimationId);
+    clearInterval(jumpInterval);
+    clearInterval(runInterval);
+    clearInterval(backgroundInterval);
+
+    // 🔥 Hide all fire/box elements
+    let boxes = document.getElementsByClassName("box");
+    for (let i = 0; i < boxes.length; i++) {
+        boxes[i].style.display = "none";
     }
+
+    // 🏆 Show win screen
+    document.getElementById("win").style.visibility = "visible";
+    document.getElementById("win").style.opacity = 1;
+}
+}
 }
 
 // Dead animation
@@ -194,9 +219,31 @@ var deadImageNumber = 1;
 
 function boyDeadAnimation() {
     deadImageNumber++;
+
     if (deadImageNumber > 10) {
         deadImageNumber = 10;
+
+        // Show end screen
+        document.getElementById("end").classList.add("visible");
+        document.getElementById("end-score").innerHTML = score;
+
+        // Hide fire (barrier) elements
+        let boxes = document.getElementsByClassName("box");
+        for (let i = 0; i < boxes.length; i++) {
+            boxes[i].style.display = "none";
+        }
+
+        clearInterval(deadAnimationNumber);
     }
 
     boy.src = "Resources/Dead (" + deadImageNumber + ").png";
 }
+
+
+
+    function reload() {
+        boxMarginLeft = 1340; // Reset barrier starting position
+        location.reload();
+    }
+    
+   

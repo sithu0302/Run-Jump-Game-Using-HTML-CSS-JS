@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jump & Run</title>
+    <title>Fire Warrior</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
 </head>
@@ -16,14 +16,21 @@
         <div class="score" id="score">
             0
         </div>
-        <!--<div class="end"id="end">
-        <center>
-            <div style="color:yellow">Game Over</div>
-            <div style="color:pink ;font-size:60px">Your score</div>
-            <div style="color:orange ;font-size:60px" class="end-score" id="end-score">0</div>
-            <button id=button>Try Again</button>
-        </center>
-        </div>-->
+        <div class="end"id="end">
+            <center>
+            <div style="color:rgb(204, 18, 65) ;font-family: cursive;">Game Over</div>
+            <div style="color:rgb(255, 255, 255) ;font-size:60px">Your score</div>
+            <div style="color:rgb(240, 240, 240) ;font-size:60px;font-family: cursive;" class="end-score" id="end-score">0</div>
+            <button id="button" onclick="reload();">
+                <img src="https://img.icons8.com/fluency/48/restart.png" style="vertical-align: middle; margin-right: 10px;">
+                Try Again
+            </button>
+            </center>
+        </div>
+        <div class="win" id="win">
+           <img src="Resources/—Pngtree—neon you win game_6047514.png" alt="win" id="win-image">
+        </div>
+        
     </div>
     <script src="script.js"></script>
 </body>

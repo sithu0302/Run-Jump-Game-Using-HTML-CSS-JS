@@ -41,19 +41,66 @@
     background:url(Resources/—Pngtree—wooden\ wood\ cartoon\ illustration_4737967.png); 
     padding: 35px 70px;
     background-size: cover;
-}/*
+}
 .end{
-    width:2000px;
-    height:100vh;
+    width:100%;
+    height:100%;
     position:absolute;
-    background-image:linear-gradient(90deg,#05464b,#11f);
+    background: #0a0202;
+    background: linear-gradient(90deg, rgba(10, 2, 2, 1) 0%, rgba(7, 7, 46, 1) 100%, rgba(87, 199, 133, 1) 100%, rgba(172, 212, 105, 1) 100%, rgba(237, 221, 83, 1) 100%);
     display:flex;
-    flex-direction:column; 
-    align-items:center;
-    font-size:90px;
+    align-items: center;
+    font-size:120px;
     font-weight:bold;
     color:white;
     font-family:"broadway";
-  
+    justify-content: center;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    opacity: 0;   
+}
+#end.visible {
+    opacity: 1;
+    visibility: visible;
+}
 
-}*/
+#button {
+    padding: 15px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Poppins', sans-serif;
+}
+
+#button:hover {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #ff4b2b, #ff416c);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+.win{
+    width:100;
+    height:100;
+    position:absolute;
+    background: #0a0202;
+    background: linear-gradient(90deg, rgba(10, 2, 2, 1) 0%, rgba(7, 7, 46, 1) 100%, rgba(87, 199, 133, 1) 100%, rgba(172, 212, 105, 1) 100%, rgba(237, 221, 83, 1) 100%);
+    display:flex;
+    align-items: center;
+    font-size:120px;
+    font-weight:bold;
+    color:white;
+    justify-content: center;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    opacity: 0;   
+    background-size: cover;
+}
+#win-image{
+    width:50%;
+    height:50%
+}
