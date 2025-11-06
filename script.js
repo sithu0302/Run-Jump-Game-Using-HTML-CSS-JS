@@ -1,23 +1,109 @@
+// --- GLOBAL GAME STATE & LEVEL MANAGEMENT ---
 var boy = document.getElementById('boy');
-var background = document.getElementById('background');
+var gameArea = document.getElementById('game-area');
 
 var idleImageNumber = 0;
 var runImageNumber = 0;
 var jumpImageNumber = 1;
-
-var idleInterval;
-var runInterval;
-var jumpInterval;
-var backgroundInterval;
+var idleInterval, runInterval, jumpInterval, backgroundInterval, boxAnimationId = 0;
 
 var backgroundPosition = 0;
-
 var isRunning = false;
 var isJumping = false;
+var score = 0;
+var boxMarginLeft = 1340;
+var passedFireCount = 0;
+var boyMarginTop = 327;
 
-var score=0;
+let currentLevel = 1;
+let levelsUnlocked = { 1: true, 2: false, 3: false, 4: false, 5: false };
+let savedLevel = 1;
 
-// Idle Animation
+
+// --- SCREEN TRANSITION FUNCTIONS ---
+
+function hideAllScreens() {
+    // This removes the .active-screen class, which coupled with the CSS fix, hides all screens.
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active-screen');
+        screen.classList.remove('level-1-bg', 'level-2-bg'); 
+    });
+}
+
+function showStartButton() {
+    const startButton = document.querySelector('.splash-button');
+    if (startButton) {
+        startButton.style.display = 'block'; 
+    }
+}
+
+function showLevelSelect() {
+    // Hide all currently active screens
+    hideAllScreens();
+    
+    // Activate the Level Select Hub
+    document.getElementById('level-select-screen').classList.add('active-screen');
+    
+    updateLevelSelectButtons(); 
+    
+    const continueBtn = document.getElementById('continue-button');
+    if (savedLevel > 1) {
+        continueBtn.style.display = 'block';
+    } else {
+        continueBtn.style.display = 'none';
+    }
+}
+
+function continueGame() {
+    startLevel(savedLevel);
+}
+
+function updateLevelSelectButtons() {
+    for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`level-${i}-btn`);
+        if (btn) {
+            if (levelsUnlocked[i]) {
+                btn.classList.remove('locked');
+            } else {
+                btn.classList.add('locked');
+            }
+        }
+    }
+}
+
+function startLevel(levelNumber) {
+    if (!levelsUnlocked[levelNumber]) {
+        console.log(`Level ${levelNumber} is locked!`);
+        return;
+    }
+
+    currentLevel = levelNumber;
+    hideAllScreens();
+    
+    gameArea.classList.add('active-screen'); 
+    
+    if (levelNumber === 1) {
+        gameArea.classList.add('level-1-bg'); 
+    }
+    
+    // Reset game state for a new level
+    score = 0;
+    document.getElementById("score").innerHTML = score;
+    boxMarginLeft = 1340;
+    passedFireCount = 0;
+    document.querySelectorAll('.box').forEach(box => box.remove()); 
+    
+    // Show game elements
+    boy.style.display = 'block';
+    document.getElementById("score").style.display = 'block';
+    
+    // START CORE GAME FUNCTIONS
+    idleAnimationStart(); 
+    creatBox();
+}
+
+// --- CORE GAME LOGIC ---
+
 function idleAnimation() {
     idleImageNumber++;
     if (idleImageNumber > 10) {
@@ -30,7 +116,6 @@ function idleAnimationStart() {
     idleInterval = setInterval(idleAnimation, 200);
 }
 
-// Run Animation
 function runAnimation() {
     runImageNumber++;
     if (runImageNumber > 8) {
@@ -39,61 +124,56 @@ function runAnimation() {
     boy.src = "Resources/Run (" + runImageNumber + ").png";
 }
 
-// Move Background
 function moveBackground() {
     backgroundPosition -= 20;
-    background.style.backgroundPosition = backgroundPosition + "px 0";
+    gameArea.style.backgroundPosition = backgroundPosition + "px 0";
 
-    score=score+1;
-    document.getElementById("score").innerHTML=score;
+    score = score + 1;
+    document.getElementById("score").innerHTML = score;
 }
 
 function startRunAnimation() {
     clearInterval(idleInterval);
     runInterval = setInterval(runAnimation, 100);
-    backgroundInterval = setInterval(moveBackground, 100);
-
+    
+    if (currentLevel === 1) { 
+        backgroundInterval = setInterval(moveBackground, 100);
+    }
+    
     if (boxAnimationId === 0) {
         boxAnimationId = setInterval(boxAnimation, 100);
     }
     isRunning = true;
-
-    
 }
-var jumpFrameNumber = 0;
-var boyMarginTop=327;
 
-// Jump Animation
+var jumpFrameNumber = 0;
+
 function jumpAnimation() {
     jumpFrameNumber++;
 
-    // Jump up
     if (jumpFrameNumber <= 6) {
         boyMarginTop -= 30;
         boy.style.marginTop = boyMarginTop + "px";
     }
 
-    // Fall down
     if (jumpFrameNumber > 6 && jumpFrameNumber <= 12) {
         boyMarginTop += 30;
         boy.style.marginTop = boyMarginTop + "px";
     }
 
-    // Change jump image
     jumpImageNumber++;
-    if (jumpImageNumber > 10) {
+    if (jumpImageNumber > 12) {
         jumpImageNumber = 1;
     }
 
     boy.src = "Resources/Jump (" + jumpImageNumber + ").png";
 
-    // End jump
-    if (jumpFrameNumber > 12) {
+    if (jumpFrameNumber > 10) {
         clearInterval(jumpInterval);
         isJumping = false;
         jumpFrameNumber = 0;
         jumpImageNumber = 1;
-        boyMarginTop = 327; // Reset position
+        boyMarginTop = 327;
 
         if (isRunning) {
             runInterval = setInterval(runAnimation, 100);
@@ -112,7 +192,6 @@ function startJumpAnimation() {
     isJumping = true;
 }
 
-// Key Press Handler
 function keyCheck(event) {
     var keycode = event.which;
 
@@ -123,95 +202,60 @@ function keyCheck(event) {
     if (keycode == 32 && !isJumping) { // Space = Jump
         startJumpAnimation();
     }
-  if(boxAnimation==0){
-        boxAnimationId=setInterval(boxAnimation,100);
-}}
+}
 
-// Make Barriers
+function creatBox() {
+    boxMarginLeft = 1340;
+    for (var i = 0; i <= 15; i++) {
+        var box = document.createElement("div");
+        box.className = "box";
+        gameArea.appendChild(box); 
+        box.style.marginLeft = boxMarginLeft + "px";
+        box.id = "box" + i;
 
-var boxMarginLeft=1340;
-
-function creatBox(){
-
-    for (var i = 0; i <= 25; i++) {
-
-
-    var box= document.createElement("div");
-    box.className="box";
-    document.getElementById("background").appendChild(box);
-    box.style.marginLeft=boxMarginLeft + "px";
-    box.id = "box" + i;
-//boxMarginLeft=boxMarginLeft+500;
-
-    
-    if (i < 8) {
-        boxMarginLeft += 750;
-    } else if (i >= 5 && i < 18) {
-        boxMarginLeft += 500;
-    } else {
-        boxMarginLeft += 350;
+        if (i < 8) {
+            boxMarginLeft += 750;
+        } else if (i >= 5 && i < 12) {
+            boxMarginLeft += 500;
+        } else {
+            boxMarginLeft += 350;
+        }
     }
-
-
 }
-}
-// Animate box movement
-var boxAnimationId = 0;
-var passedFireCount = 0;
 
-// Animate box movement and check for collisions
 function boxAnimation() {
-    for (var i = 0; i <= 25; i++) {
+    for (var i = 0; i <= 15; i++) {
         var box = document.getElementById("box" + i);
         if (box) {
             var currentMarginLeft = parseInt(getComputedStyle(box).marginLeft);
             box.style.marginLeft = (currentMarginLeft - 25) + "px";
-//  Count as passed when it leaves the character area
-        if (currentMarginLeft < 100 && !box.passed) {
-            passedFireCount++;
-            box.passed = true;          
-        }
-// Collision detection
+
+            if (currentMarginLeft < 100 && !box.passed) {
+                passedFireCount++;
+                box.passed = true; 
+            }
+
             if (currentMarginLeft >= 100 && currentMarginLeft <= 150) {
                 if (boyMarginTop >= 327 && !isJumping) {
- // Collision occurred → Game over
+                    // Collision occurred → Game over
                     clearInterval(boxAnimationId);
                     clearInterval(jumpInterval);
                     clearInterval(runInterval);
                     clearInterval(backgroundInterval);
 
                     boxAnimationId = 0;
-                    runInterval = 0;
-                    backgroundInterval = 0;
-
-                    if (deadAnimationNumber === 0) {
-                        deadAnimationNumber = setInterval(boyDeadAnimation, 100);
-                    }
-
+                    deadAnimationNumber = setInterval(boyDeadAnimation, 100);
                     break;
                 }
             }
         }
-
-   // 🎉 Win Condition
-   if (passedFireCount >= 25) {
-    clearInterval(boxAnimationId);
-    clearInterval(jumpInterval);
-    clearInterval(runInterval);
-    clearInterval(backgroundInterval);
-
-    // 🔥 Hide all fire/box elements
-    let boxes = document.getElementsByClassName("box");
-    for (let i = 0; i < boxes.length; i++) {
-        boxes[i].style.display = "none";
     }
 
-    // 🏆 Show win screen
-    document.getElementById("win").style.visibility = "visible";
-    document.getElementById("win").style.opacity = 1;
+    if (passedFireCount >= 15) {
+        levelComplete();
+    }
 }
-}
-}
+
 
 // Dead animation
 var deadAnimationNumber = 0;
@@ -246,4 +290,48 @@ function boyDeadAnimation() {
         location.reload();
     }
     
+
+
+function levelComplete() {
+    clearInterval(boxAnimationId);
+    clearInterval(jumpInterval);
+    clearInterval(runInterval);
+    clearInterval(backgroundInterval);
+
+    let nextLevel = currentLevel + 1;
+    if (nextLevel <= 5) {
+        levelsUnlocked[nextLevel] = true;
+        savedLevel = nextLevel; 
+    }
+
+    boy.style.display = 'none';
+    document.getElementById("score").style.display = 'none';
+
+    // Hide all fire boxes
+    let boxes = document.getElementsByClassName("box");
+    for (let i = 0; i < boxes.length; i++) {
+        boxes[i].style.display = "none";
+    }
+
+    // ✅ Only show WIN screen
+    document.getElementById("win").classList.add("visible");
+}
+
+
+function reload() {
+    location.reload(); 
+}
+
+// --- INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', () => {
+    hideAllScreens();
+    document.getElementById('splash-screen-only').classList.add('active-screen');
+    
+    boy.style.display = 'none';
+    document.getElementById("score").style.display = 'none';
    
+    setTimeout(showStartButton, 2000); 
+});
+
+   
+
