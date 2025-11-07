@@ -164,30 +164,81 @@ html, body {
     background-size: cover;
 }
 /* --- GAME OVER / WIN OVERLAYS (CRITICAL FIX) --- */
-.end, .win {
-    width:100%;
-    height:100%;
-    position:absolute;
+.end {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
     background: linear-gradient(90deg, rgba(10, 2, 2, 1) 0%, rgba(7, 7, 46, 1) 100%);
-    display:flex;
-    flex-direction: column; /* FIX ✅ */
-    align-items: center;
-    justify-content: center;
-    font-size:120px;
-    font-weight:bold;
-    color:white;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;     /* ✅ centers vertically */
+    align-items: center;         /* ✅ centers horizontally */
+
     visibility: hidden;
     opacity: 0;
-    transition: all 0.5s ease;
-    white-space: pre-line; /* FIX ✅ */
-}
+    transition: opacity 0.5s ease;
 
+    z-index: 9999;               /* ✅ always on top */
+}
 
 /* Makes the Game Over/Win screen appear */
 #end.visible, #win.visible {
     opacity: 1;
     visibility: visible;
 }
+
+.win {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background: linear-gradient(90deg, rgba(10, 2, 2, 1) 0%, rgba(7, 7, 46, 1) 100%);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 9999;
+}
+.win.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.win-text {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.win-score {
+    font-size: 40px;
+    margin-bottom: 30px;
+}
+
+
+.next-level-button, .back-button {
+    padding: 15px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #11be46, #0f8a34);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
 #button {
     padding: 15px 20px;
     font-size: 24px;
@@ -208,24 +259,226 @@ html, body {
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Ensure the Win Image doesn't stretch the screen */
-#win-image{
-    width: 50%;
-    height: auto;
-    margin-bottom: 20px;
+
+#info-settings-screen {
+    background-color: #111;
+    color: rgb(92, 33, 33);
+    flex-direction: column;
 }
-/* Add style for the NEXT LEVEL button as well */
-.next-level-button {
-    /* Reuse button styles */
-    padding: 15px 40px;
-    font-size: 24px;
-    font-weight: bold;
-    color: white;
-    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+
+.info-box {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 15px 0;
+    width: 90%;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.info-box h3 {
+    color: #ff416c;
+}
+
+#sound-toggle {
+    padding: 12px 30px;
+    font-size: 20px;
     border: none;
-    border-radius: 50px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    background-color: #ff416c;
+    border-radius: 10px;
     cursor: pointer;
-    margin-top: 30px; 
-    font-family: 'Poppins', sans-serif;
+}
+/* ✅ SETTINGS OVERLAY */
+#settings-screen {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+}
+
+#settings-screen.active-screen {
+    display: flex !important;
+}
+
+/* ✅ MAIN PANEL */
+.settings-panel {
+    width: 90%;
+    max-width: 380px;
+    padding: 25px;
+    background: linear-gradient(145deg, #ffe8a3, #ffcf63);
+    border-radius: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    text-align: center;
+    position: relative;
+    animation: popIn 0.35s ease;
+}
+
+/* ✅ PANEL ANIMATION */
+@keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ✅ CLOSE BUTTON */
+.close-settings {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ✅ TITLE */
+.settings-title {
+    font-size: 28px;
+    color: #6b3d00;
+    margin-bottom: 15px;
+}
+
+/* ✅ HOW TO PLAY BOX */
+.how-to-play {
+    background: rgba(255,255,255,0.4);
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    color: #4a2a00;
+}
+
+.how-to-play h3 {
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: #d84e00;
+}
+
+/* ✅ TOGGLE ROW */
+.toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+    font-size: 22px;
+    color: #5e3600;
+}
+
+/* ✅ TOGGLE BUTTON */
+.toggle-btn {
+    width: 90px;
+    padding: 8px 0;
+    border-radius: 20px;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.toggle-btn.on {
+    background: #22c55e;
+    color: white;
+}
+
+.toggle-btn.off {
+    background: #ef4444;
+    color: white;
+}
+
+/* ✅ VOLUME SLIDER */
+.volume-control input[type=range] {
+    width: 100%;
+    margin: 20px 0;
+}
+
+/* ✅ START GAME BUTTON */
+.start-game-btn {
+    width: 100%;
+    padding: 14px 0;
+    background: linear-gradient(135deg, #ff764c, #b32b13);
+    border: none;
+    border-radius: 25px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    color: #063a15;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* ✅ BACK BUTTON */
+.back-to-menu {
+    width: 100%;
+    padding: 12px 0;
+    background: #ffd860;
+    border: none;
+    margin-top: 12px;
+    border-radius: 25px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #4a3200;
+}
+
+/* ✅ RESPONSIVE */
+@media (max-width: 480px) {
+    .settings-panel {
+        max-width: 90%;
+    }
+    .settings-title {
+        font-size: 24px;
+    }
+    .toggle-row span {
+        font-size: 18px;
+    }
+}
+/* --- HOW TO PLAY NEW UI --- */
+.how-line {
+    font-size: 20px;
+    color: white;
+    margin: 12px 0;
+    text-align: left;
+}
+
+/* beautiful glowing key highlight */
+.key-highlight {
+    display: inline-block;
+    padding: 5px 14px;
+    margin: 0 6px;
+    background: linear-gradient(145deg, #1f1f1f, #292929);
+    border-radius: 8px;
+    color: #00eaff;
+    font-size: 20px;
+    font-weight: bold;
+    border: 2px solid #00eaff;
+    box-shadow: 0 0 10px #00eaff, inset 0 0 8px rgba(0, 234, 255, 0.3);
+    transition: 0.2s ease;
+}
+
+.key-highlight:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 16px #00eaff, inset 0 0 14px rgba(0, 234, 255, 0.6);
+}
+
+/* ⚠️ avoid text */
+.avoid-text {
+    margin-top: 20px;
+    text-align: center;
+    color: #ffdf5d;
+    font-size: 19px;
+    text-shadow: 0 0 8px #ff8800;
+}
+
+/* responsive */
+@media (max-width: 500px) {
+    .key-highlight {
+        font-size: 17px;
+        padding: 4px 12px;
+    }
+    .how-line {
+        font-size: 17px;
+    }
 }

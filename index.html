@@ -16,26 +16,91 @@
         </button> 
     </div>
 
-    <div id="level-select-screen" class="screen">
-        <h2>Choose Your Path, Fire Warrior!</h2>
-        <div class="level-button-container">
-            <button class="level-button" id="level-1-btn" onclick="startLevel(1);">
-                🔥 LEVEL 1: FOREST ESCAPE
-            </button>
-            <button class="level-button locked" id="level-2-btn" onclick="startLevel(2);">
-                🏰 LEVEL 2: CASTLE ATTACK
-            </button>
-            <button class="level-button locked" id="level-3-btn" onclick="startLevel(3);">
-                🌊 LEVEL 3: CITY ESCAPE
-            </button>
-            <button class="level-button locked" id="level-4-btn" onclick="startLevel(4);">
-                🌪️ LEVEL 4: MOUNTAIN CHALLENGE
-            </button>
-            <button class="level-button locked" id="level-5-btn" onclick="startLevel(5);">
-                👑 LEVEL 5: FINAL BOSS
-            </button>
+<!-- SPLASH SCREEN -->
+<div id="splash-screen-only" class="screen active-screen">
+    <h1 class="splash-title-overlay"></h1> 
+    <button class="splash-button" onclick="showLevelSelect();" style="display:none;"> 
+        START GAME
+    </button> 
+</div>
+
+<!-- LEVEL SELECT SCREEN -->
+<div id="level-select-screen" class="screen">
+    <h2>Choose Your Path, Fire Warrior!</h2>
+
+    <div class="level-button-container">
+        <button class="level-button" id="level-1-btn" onclick="currentLevel=1; showInfoSettings();">
+            🔥 LEVEL 1: FOREST ESCAPE
+        </button>
+        <button class="level-button locked" id="level-2-btn"> 🏰 LEVEL 2: CASTLE ATTACK </button>
+        <button class="level-button locked" id="level-3-btn"> 🌊 LEVEL 3: CITY ESCAPE </button>
+        <button class="level-button locked" id="level-4-btn"> 🌪️ LEVEL 4: MOUNTAIN CHALLENGE </button>
+        <button class="level-button locked" id="level-5-btn"> 👑 LEVEL 5: FINAL BOSS </button>
+    </div>
+
+    <button id="continue-button" class="splash-button" onclick="continueGame();" style="margin-top: 30px; display: none;">
+        CONTINUE
+    </button>
+</div>
+<!-- ✅ NEW BEAUTIFUL SETTINGS SCREEN -->
+<div id="settings-screen" class="screen">
+    <div class="settings-panel">
+
+        <button class="close-settings" onclick="showLevelSelect();">×</button>
+
+        <h2 class="settings-title">⚙️ Game Settings</h2>
+
+        <!-- ✅ HOW TO PLAY -->
+<div class="info-box">
+    <h3 class="how-title">🎮 HOW TO PLAY</h3>
+
+    <p class="how-line">
+        Press <span class="key-highlight">ENTER</span> to start running
+    </p>
+
+    <p class="how-line">
+        Press <span class="key-highlight">SPACE</span> to jump
+    </p>
+
+    <p class="avoid-text">⚠️ Avoid all fire obstacles!</p>
+</div>
+
+
+
+        <!-- ✅ SOUND TOGGLES -->
+        <div class="toggle-row">
+            <span>🎵 Music</span>
+            <button id="music-toggle" class="toggle-btn on" onclick="toggleMusic();">ON</button>
+        </div>
+
+        <div class="toggle-row">
+            <span>🔊 Sound</span>
+            <button id="sound-toggle" class="toggle-btn on" onclick="toggleSound();">ON</button>
         </div>
         
+<audio id="nature-sound" src="Resources/sounds/nature.mp3" loop></audio>
+<audio id="jump-sound" src="Resources/sounds/jump.mp3"></audio>
+<audio id="win-sound" src="Resources/sounds/win.mp3"></audio>
+<audio id="gameover-sound" src="Resources/sounds/gameover.mp3"></audio>
+<audio id="start-sound" src="Resources/sounds/start.mp3"></audio>
+<audio id="ui-click-sound" src="Resources/button-click.mp3"></audio>
+<audio id="ui-theme" src="Resources/firewarrior-theme.mp3" loop></audio>
+
+
+        <!-- ✅ VOLUME -->
+        <div class="volume-control">
+            <input type="range" id="volume-slider" min="0" max="100" value="80"
+                onchange="adjustVolume(this.value)">
+        </div>
+
+        <!-- ✅ ACTION BUTTONS -->
+        <button class="start-game-btn" onclick="startLevel(currentLevel);"> Play</button>
+        <button class="back-to-menu" onclick="showLevelSelect();">⬅ Back</button>
+
+    </div>
+</div>
+
+
         <button id="continue-button" class="splash-button" onclick="continueGame();" style="margin-top: 30px; display: none;">
             CONTINUE
         </button>
@@ -50,21 +115,38 @@
         </div>
 
        <div class="end" id="end">
-            <div style="color:rgb(204, 18, 65) ;font-family: cursive;">Game Over</div>
+            <div style="color:rgb(204, 18, 65) ;font-family: cursive; font-size: 80px;">Game Over</div>
             <div style="color:rgb(255, 255, 255) ;font-size:60px">Your score</div>
             <div style="color:rgb(240, 240, 240) ;font-size:60px;font-family: cursive;" class="end-score" id="end-score">0</div>
-            <button id="button" onclick="reload();">
+           <button id="button" onclick="tryAgain();">
+
                 <img src="https://img.icons8.com/fluency/48/restart.png" style="vertical-align: middle; margin-right: 10px;">
                 Try Again
             </button>
             </div>
-        <div class="win" id="win">
-           <img src="Resources/—Pngtree—neon you win game_6047514.png" alt="win" id="win-image">
-           <button class="next-level-button" onclick="showLevelSelect();">
-               NEXT LEVEL
-           </button>
-        </div>
-        
+    <div class="win" id="win">
+    <div style="color:#2bff88; font-family: cursive; font-size: 80px;">
+        YOU WIN!
+    </div>
+
+    <div style="color:white; font-size:50px;">
+        Your Score
+    </div>
+
+    <div id="win-score-value" style="color:white; font-size:60px; font-family:cursive;">
+        0
+    </div>
+
+    <button class="next-level-button" onclick="goToNextLevel();">
+        Next Level
+    </button>
+
+    <button class="back-button" onclick="showLevelSelect();">
+        Back 
+    </button>
+</div>
+
+
     </div>
     <script src="script.js"></script>
 </body>
